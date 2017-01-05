@@ -1,0 +1,20 @@
+1. 使用微信api功能，调取this，和修改this的问题
+operation:function() {
+    // 将this赋值给than
+    var than = this;
+    wx.showActionSheet({
+      itemList: ['A', 'B', 'C'],
+      success: function(res) {
+        console.log(res.tapIndex);
+        if(res.tapIndex == 0) {
+        // api函数中使用than，就想到与引用外层的this
+          than.setData({
+              phone: "15202483370"
+          })
+        }
+      },
+      fail: function(res) {
+        console.log(res.errMsg)
+      }
+    })
+  }
