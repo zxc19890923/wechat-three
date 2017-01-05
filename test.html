@@ -18,3 +18,82 @@ operation:function() {
       }
     })
   }
+
+
+2. weui和微信小程序写的查询
+js
+Page({
+    data: {
+        inputShowed: false,
+        inputVal: "",
+        // 初始化查询内容为空
+        userInfo: {}
+    },
+    showInput: function () {
+        this.setData({
+            inputShowed: true
+        });
+    },
+    hideInput: function () {
+        this.setData({
+            inputVal: "",
+            inputShowed: false
+        });
+    },
+    clearInput: function () {
+        this.setData({
+            inputVal: ""
+        });
+    },
+    // 输入查询
+    inputTyping: function (e) {
+        var than = this;
+        wx.request({
+            url: "http://www.eastgrain.cn/data/list.html",
+            // 实际情况要添加data参数
+            success: function(res) {
+                console.log(res.data);
+                than.setData({
+                    userInfo: res.data
+                })
+            },
+            file: function(e) {
+                console.log(e);
+            }
+        })
+        console.log(e.detail.value);
+    },
+    onReady:function() {
+        
+    }
+});
+
+
+wxml
+
+<view class="page">
+    <view class="page__bd">
+        <view class="weui-search-bar">
+            <view class="weui-search-bar__form">
+                <view class="weui-search-bar__box">
+                    <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
+                    <input type="text" class="weui-search-bar__input" placeholder="搜索" value="{{inputVal}}" focus="{{inputShowed}}" bindinput="inputTyping"/>
+                    <view class="weui-icon-clear" wx:if="{{inputVal.length > 0}}" bindtap="clearInput">
+                        <icon type="clear" size="14"></icon>
+                    </view>
+                </view>
+                <label class="weui-search-bar__label" hidden="{{inputShowed}}" bindtap="showInput">
+                    <icon class="weui-icon-search" type="search" size="14"></icon>
+                    <view class="weui-search-bar__text">搜索</view>
+                </label>
+            </view>
+            <view class="weui-search-bar__cancel-btn" hidden="{{!inputShowed}}" bindtap="hideInput">取消</view>
+        </view>
+        <view class="weui-cells searchbar-result">
+            <navigator url="" class="weui-cell" hover-class="weui-cell_active" wx:for="{{userInfo}}" wx:key="search">
+            
+                    <view>{{item.title}}</view>
+            </navigator>
+        </view>
+    </view>
+</view>
